@@ -12,11 +12,11 @@ import json
 from tqdm import tqdm
 import wandb
 
-from ..config_manager import ConfigManager
-from ..models.model_factory import ModelFactory
-from ..data.data_preprocessor import create_data_loaders
-from ..utils.metrics import MetricsCalculator
-from ..utils.device_manager import DeviceManager
+from config_manager import ConfigManager
+from models.model_factory import ModelFactory
+from data.fer2013_processor import create_fer2013_data_loaders
+from utils.metrics import MetricsCalculator
+from utils.device_manager import DeviceManager
 
 class EmotionTrainer:
     """
@@ -325,7 +325,7 @@ class EmotionTrainer:
         
         # Crear data loaders
         self.logger.info("Creando data loaders...")
-        dataloaders = create_data_loaders(self.config)
+        dataloaders = create_fer2013_data_loaders(self.config)
         
         train_loader = dataloaders['train']
         val_loader = dataloaders['val']
@@ -453,7 +453,7 @@ class EmotionTrainer:
         self.model.load_state_dict(checkpoint['model_state_dict'])
         
         # Crear data loader de test
-        dataloaders = create_data_loaders(self.config)
+        dataloaders = create_fer2013_data_loaders(self.config)
         test_loader = dataloaders['test']
         
         self.logger.info("Evaluando en conjunto de test...")

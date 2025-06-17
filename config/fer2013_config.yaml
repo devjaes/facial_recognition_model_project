@@ -72,10 +72,12 @@ model:
 training:
   # Hiperparámetros optimizados
   batch_size: 32 # Incrementado para FER2013
+  effective_batch_size: 32 # Se calculará automáticamente según el dispositivo
   learning_rate: 0.001
-  epochs: 200 # Menos épocas necesarias para FER2013
+  epochs: 50 # Ajustado para entrenamiento inicial
   optimizer: "adam"
   loss_function: "cross_entropy"
+  mixed_precision: false # Se configurará automáticamente según el dispositivo
 
   # Data split (FER2013 ya viene pre-dividido)
   train_split: 0.8
