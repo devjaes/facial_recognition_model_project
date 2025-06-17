@@ -265,7 +265,10 @@ def main():
         config = {
             'paths': {'data_root': './data', 'processed_data': './data/processed'},
             'emotions': {'active_emotions': ['anger', 'disgust', 'fear', 'happy', 'sadness', 'surprise', 'neutral']},
-            'model': {'cnn_rnn_hybrid': {'input_size': [224, 224]}},
+            'model': {
+                'architecture': 'cnn_rnn_hybrid',
+                'cnn_rnn_hybrid': {'input_size': [224, 224]}
+            },
             'training': {'enable_augmentation': True, 'effective_batch_size': 32, 'num_workers': 4, 'pin_memory': True}
         }
     

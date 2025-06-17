@@ -9,8 +9,8 @@ project:
 # Configuración de emociones para FER2013
 emotions:
   # 7 emociones básicas de FER2013
-  fer2013_emotions:
-    ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
+  fer2013_emotions: ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
+  basic_emotions: ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
 
   # Mapeo específico FER2013 -> Proyecto
   emotion_mapping:
@@ -23,9 +23,8 @@ emotions:
     neutral: "neutral"
 
   # Configuración activa
-  mode: "fer2013"
-  active_emotions:
-    ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
+  mode: "basic"
+  active_emotions: ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
   num_classes: 7
 
 # Configuración de entrada
