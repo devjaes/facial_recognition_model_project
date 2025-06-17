@@ -1,0 +1,190 @@
+# config/fer2013_config.yaml
+# Configuración optimizada para dataset FER2013
+
+project:
+  name: "facial_emotion_recognition_fer2013"
+  version: "1.0.0"
+  description: "Sistema de reconocimiento de emociones faciales usando FER2013"
+
+# Configuración de emociones para FER2013
+emotions:
+  # 7 emociones básicas de FER2013
+  fer2013_emotions:
+    ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
+
+  # Mapeo específico FER2013 -> Proyecto
+  emotion_mapping:
+    angry: "anger"
+    disgust: "disgust"
+    fear: "fear"
+    happy: "happy"
+    sad: "sadness"
+    surprise: "surprise"
+    neutral: "neutral"
+
+  # Configuración activa
+  mode: "fer2013"
+  active_emotions:
+    ["anger", "disgust", "fear", "happy", "sadness", "surprise", "neutral"]
+  num_classes: 7
+
+# Configuración de entrada
+input:
+  source_type: "realtime" # "realtime", "static_images", "video_files"
+
+  realtime:
+    enable_webcam: true
+    fps_target: 15 # Reducido para mejor performance con FER2013
+    frame_buffer_size: 5
+
+  static_images:
+    supported_formats: [".jpg", ".jpeg", ".png", ".bmp"]
+    max_image_size: "10MB"
+
+# Configuración del modelo optimizada para FER2013
+model:
+  architecture: "cnn_rnn_hybrid" # "cnn_basic", "cnn_rnn_hybrid", "transfer_learning"
+
+  # CNN básico (rápido, para FER2013 48x48)
+  cnn_basic:
+    input_size: [48, 48]
+    channels: 3 # RGB
+    filters: [32, 64, 128] # Menos filtros para imágenes pequeñas
+    dropout: 0.5
+
+  # CNN-RNN híbrido (mejor accuracy)
+  cnn_rnn_hybrid:
+    input_size: [224, 224] # Escalar FER2013 a tamaño estándar
+    channels: 3
+    cnn_filters: [64, 128] # Optimizado para FER2013
+    lstm_hidden: [256, 128] # Reducido para FER2013
+    dropout: 0.5
+    sequence_length: 5 # Menos frames para mejor performance
+
+  # Transfer learning optimizado
+  transfer_learning:
+    base_model: "mobilenetv2" # Mejor para FER2013
+    pretrained: true
+    freeze_base: true
+    fine_tune_layers: 20
+    input_size: [224, 224]
+
+# Configuración de entrenamiento optimizada para FER2013
+training:
+  # Hiperparámetros optimizados
+  batch_size: 32 # Incrementado para FER2013
+  learning_rate: 0.001
+  epochs: 200 # Menos épocas necesarias para FER2013
+  optimizer: "adam"
+  loss_function: "cross_entropy"
+
+  # Data split (FER2013 ya viene pre-dividido)
+  train_split: 0.8
+  val_split: 0.15
+  test_split: 0.05
+
+  # Augmentation específica para FER2013
+  enable_augmentation: true
+  augmentation:
+    rotation_range: 20
+    width_shift_range: 0.2
+    height_shift_range: 0.2
+    brightness_range: [0.7, 1.3]
+    horizontal_flip: true
+    zoom_range: 0.2
+    gaussian_noise: true # Específico para FER2013
+    gaussian_blur: true
+
+# Configuración de dispositivos (igual que antes)
+devices:
+  auto_detect: true
+
+  macos_m3:
+    device: "mps"
+    mixed_precision: false
+    batch_size_multiplier: 1.5
+
+  linux_cuda:
+    device: "cuda"
+    mixed_precision: true
+    batch_size_multiplier: 2.0
+
+  windows_cuda:
+    device: "cuda"
+    mixed_precision: true
+    batch_size_multiplier: 2.0
+
+  cpu_fallback:
+    device: "cpu"
+    mixed_precision: false
+    batch_size_multiplier: 0.5
+
+# Paths actualizados para FER2013
+paths:
+  project_root: "."
+  data_root: "./data"
+  models_root: "./models"
+  logs_root: "./logs"
+
+  # Datasets específicos
+  fer2013_dataset: "./data/raw/fer2013"
+  processed_data: "./data/processed"
+
+  # Modelos
+  trained_models: "./models/trained"
+  checkpoints: "./models/checkpoints"
+
+  # Web app
+  web_static: "./src/web/static"
+  web_templates: "./src/web/templates"
+
+# Configuración de deployment
+deployment:
+  mode: "local_web"
+
+  local_web:
+    host: "0.0.0.0" # Accesible desde otros dispositivos en red local
+    port: 5000
+    debug: false # Producción
+    threaded: true
+
+  performance:
+    enable_caching: true
+    max_concurrent_requests: 3 # Reducido para FER2013
+    timeout_seconds: 15 # Menos tiempo para FER2013
+
+# Objetivos específicos para FER2013
+targets:
+  accuracy:
+    baseline: 65.0 # Objetivo mínimo para FER2013
+    target: 75.0 # Objetivo ambicioso
+    excellent: 80.0 # Excelente para FER2013
+
+  performance:
+    inference_time_ms: 50 # Máximo tiempo por predicción
+    fps_realtime: 15 # FPS mínimo en tiempo real
+    model_size_mb: 25 # Tamaño máximo del modelo
+
+# Logging específico
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_logging: true
+  console_logging: true
+
+  # Logs específicos para FER2013
+  experiment_tracking: true
+  save_misclassified: true # Guardar ejemplos mal clasificados
+  confusion_matrix_frequency: 10 # Cada 10 épocas
+
+# Monitoring y experimentos
+monitoring:
+  enable_metrics: true
+  metrics_interval: 5
+  save_predictions: true
+  enable_visualization: true
+
+  # Específico para FER2013
+  track_per_emotion_metrics: true
+  generate_classification_report: true
+  save_model_comparisons: true

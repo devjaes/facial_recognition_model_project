@@ -1,0 +1,423 @@
+# ==============================================================================
+# .gitignore para Proyecto de Reconocimiento de Emociones Faciales
+# ==============================================================================
+
+# Python
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Datasets y Datos
+# ------------------------------------------------------------------------------
+# Datasets originales (muy grandes para git)
+data/raw/
+!data/raw/.gitkeep
+
+# Datos procesados (pueden ser regenerados)
+data/processed/
+!data/processed/.gitkeep
+
+# Datos temporales
+data/temp/
+data/cache/
+
+# Archivos de datos específicos
+*.csv
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npy
+*.npz
+
+# Imágenes y videos (excepto ejemplos pequeños)
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+*.gif
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Permitir imágenes de documentación/ejemplos pequeñas
+!docs/assets/*.png
+!docs/assets/*.jpg
+!src/web/static/assets/*.png
+!src/web/static/assets/*.jpg
+!README_assets/*.png
+!README_assets/*.jpg
+
+# Modelos Entrenados
+# ------------------------------------------------------------------------------
+# Modelos PyTorch (pueden ser muy grandes)
+models/trained/*.pth
+models/trained/*.pt
+models/checkpoints/*.pth
+models/checkpoints/*.pt
+models/optimized/*.pth
+models/optimized/*.pt
+
+# Mantener estructura de directorios
+!models/trained/.gitkeep
+!models/checkpoints/.gitkeep
+!models/optimized/.gitkeep
+
+# Modelos ONNX y otros formatos
+*.onnx
+*.tflite
+*.pb
+
+# Logs y Monitoreo
+# ------------------------------------------------------------------------------
+# Logs del sistema
+logs/
+!logs/.gitkeep
+
+# TensorBoard logs
+runs/
+tensorboard_logs/
+
+# Weights & Biases
+wandb/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Experimentos y Resultados
+# ------------------------------------------------------------------------------
+experiments/
+results/
+outputs/
+reports/*.html
+reports/*.pdf
+
+# Mantener estructura
+!experiments/.gitkeep
+!results/.gitkeep
+!reports/.gitkeep
+
+# Configuraciones Sensibles
+# ------------------------------------------------------------------------------
+# Archivos de configuración con secrets
+config/*_secret.yaml
+config/*_private.yaml
+config/production.yaml
+.secrets
+secrets.json
+
+# Variables de entorno
+.env.local
+.env.*.local
+
+# Sistema Operativo
+# ------------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Conda y Pip
+# ------------------------------------------------------------------------------
+# Conda environments (si están en el proyecto)
+envs/
+environment_*.yml.lock
+
+# Pip
+pip-wheel-metadata/
+
+# Web y Frontend
+# ------------------------------------------------------------------------------
+# Node modules (si usas algún frontend tool)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+
+# Web app uploads (temporal)
+src/web/uploads/
+src/web/temp/
+
+# Docker
+# ------------------------------------------------------------------------------
+# Docker files temporales
+.dockerignore.bak
+docker-compose.override.yml
+
+# GPU y CUDA
+# ------------------------------------------------------------------------------
+# CUDA cache
+.nv_cache/
+
+# Archivos de Desarrollo
+# ------------------------------------------------------------------------------
+# Notas temporales
+TODO.md
+NOTES.md
+*.draft
+*.backup
+
+# Archivos de profiling
+*.prof
+*.profile
+
+# Memory dumps
+*.dump
+*.dmp
+
+# Backup files
+*.bak
+*.orig
+*.rej
+
+# Archivos de Configuración Local
+# ------------------------------------------------------------------------------
+# Configuraciones específicas del desarrollador
+config/local.yaml
+config/dev_*.yaml
+config/test_*.yaml
+
+# Configuraciones de IDE
+.project
+.pydevproject
+.settings/
+
+# Archivos de Base de Datos
+# ------------------------------------------------------------------------------
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Otros formatos de DB
+*.mdb
+*.accdb
+
+# Archivos Temporales del Proyecto
+# ------------------------------------------------------------------------------
+# Archivos temporales de procesamiento
+temp/
+tmp/
+scratch/
+
+# Archivos de debugging
+debug/
+debug_*.txt
+debug_*.log
+
+# Benchmarks temporales
+benchmark_results/
+performance_tests/
+
+# Archivos de Sistema
+# ------------------------------------------------------------------------------
+# Thumbnails
+*.thumb
+
+# Archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Excepciones Específicas del Proyecto
+# ------------------------------------------------------------------------------
+# Mantener archivos de ejemplo pequeños
+!data/examples/
+!docs/examples/
+!notebooks/examples/
+
+# Mantener configuraciones de ejemplo
+!config/example_*.yaml
+!config/template_*.yaml
+
+# Mantener scripts de setup
+!scripts/setup_*.py
+!scripts/install_*.sh
+
+# Mantener documentación
+!docs/
+!*.md
+!*.rst
+!*.txt
+
+# Mantener tests
+!tests/
+
+# ==============================================================================
+# NOTAS IMPORTANTES:
+# 
+# 1. Los datasets van en data/raw/ y NO se suben a git por tamaño
+# 2. Los modelos entrenados van en models/trained/ y NO se suben por tamaño  
+# 3. Los logs van en logs/ y NO se suben por ser temporales
+# 4. Las configuraciones con secrets NO se suben por seguridad
+# 5. Los archivos temporales NO se suben por limpieza
+#
+# Para añadir un archivo específico que esté en .gitignore:
+# git add -f archivo_especifico.ext
+#
+# Para ver qué archivos están siendo ignorados:
+# git status --ignored
+# ==============================================================================

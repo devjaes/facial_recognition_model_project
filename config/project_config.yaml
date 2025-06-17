@@ -1,0 +1,181 @@
+# config/project_config.yaml
+# Configuración principal del proyecto - completamente parametrizable
+
+project:
+  name: "facial_emotion_recognition"
+  version: "1.0.0"
+  description: "Sistema de reconocimiento de emociones faciales basado en CNN-RNN"
+
+# Configuración de emociones - PARAMETRIZABLE
+emotions:
+  # Modo básico (7 emociones universales)
+  basic_emotions:
+    ["anger", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
+
+  # Modo extendido (9 emociones del dataset Emognition)
+  extended_emotions:
+    [
+      "anger",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise",
+      "amusement",
+      "awe",
+      "enthusiasm",
+      "liking",
+    ]
+
+  # Configuración activa
+  mode: "extended" # "basic" o "extended"
+  num_classes: 9 # Se actualiza automáticamente según el modo
+
+# Configuración de entrada - PARAMETRIZABLE
+input:
+  # Tipo de entrada
+  source_type: "realtime" # "realtime", "static_images", "video_files"
+
+  # Configuraciones por tipo
+  realtime:
+    enable_webcam: true
+    fps_target: 30
+    frame_buffer_size: 10
+
+  static_images:
+    supported_formats: [".jpg", ".jpeg", ".png", ".bmp"]
+    max_image_size: "10MB"
+
+  video_files:
+    supported_formats: [".mp4", ".avi", ".mov"]
+    max_duration: "300s" # 5 minutos máximo
+
+# Configuración del modelo - PARAMETRIZABLE
+model:
+  architecture: "cnn_rnn_hybrid" # "cnn_basic", "cnn_rnn_hybrid", "transfer_learning"
+
+  # Configuraciones específicas por arquitectura
+  cnn_basic:
+    input_size: [48, 48]
+    channels: 1 # Grayscale
+    filters: [64, 128, 256]
+    dropout: 0.5
+
+  cnn_rnn_hybrid:
+    input_size: [224, 224] # Para mejor feature extraction
+    channels: 3 # RGB para transfer learning base
+    cnn_filters: [128, 64]
+    lstm_hidden: [512, 128]
+    dropout: 0.5
+    sequence_length: 10 # Para análisis temporal
+
+  transfer_learning:
+    base_model: "mobilenetv2" # "inceptionv3", "mobilenetv2", "resnet50"
+    pretrained: true
+    freeze_base: true
+    fine_tune_layers: 30
+
+# Configuración de entrenamiento - PARAMETRIZABLE
+training:
+  # Hiperparámetros
+  batch_size: 8
+  learning_rate: 0.001
+  epochs: 500
+  optimizer: "adam" # "adam", "sgd", "rmsprop"
+  loss_function: "cross_entropy"
+
+  # Data split
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+  # Augmentation
+  enable_augmentation: true
+  augmentation:
+    rotation_range: 15
+    width_shift_range: 0.1
+    height_shift_range: 0.1
+    brightness_range: [0.8, 1.2]
+    horizontal_flip: true
+    zoom_range: 0.1
+
+# Configuración de dispositivos - MULTIPLATAFORMA
+devices:
+  # Configuración automática por plataforma
+  auto_detect: true
+
+  # Configuraciones específicas
+  macos_m3:
+    device: "mps" # Metal Performance Shaders
+    mixed_precision: false # Problemas conocidos con MPS
+    batch_size_multiplier: 1.5
+
+  linux_cuda:
+    device: "cuda"
+    mixed_precision: true
+    batch_size_multiplier: 2.0
+
+  windows_cuda:
+    device: "cuda"
+    mixed_precision: true
+    batch_size_multiplier: 2.0
+
+  cpu_fallback:
+    device: "cpu"
+    mixed_precision: false
+    batch_size_multiplier: 0.5
+
+# Configuración de deployment
+deployment:
+  mode: "local_web" # "local_web", "mobile_app", "cloud_api"
+
+  local_web:
+    host: "localhost"
+    port: 5000
+    debug: true
+    threaded: true
+
+  mobile_optimization:
+    enable_quantization: true
+    enable_pruning: false
+    target_size_mb: 10
+
+  performance:
+    enable_caching: true
+    max_concurrent_requests: 4
+    timeout_seconds: 30
+
+# Paths y estructura de datos
+paths:
+  # Estructura base del proyecto
+  project_root: "."
+  data_root: "./data"
+  models_root: "./models"
+  logs_root: "./logs"
+
+  # Datasets
+  emognition_dataset: "./data/emognition_2020"
+  fer2013_dataset: "./data/fer2013"
+  processed_data: "./data/processed"
+
+  # Modelos
+  trained_models: "./models/trained"
+  checkpoints: "./models/checkpoints"
+
+  # Web app
+  web_static: "./web/static"
+  web_templates: "./web/templates"
+
+# Logging y monitoring
+logging:
+  level: "INFO" # "DEBUG", "INFO", "WARNING", "ERROR"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_logging: true
+  console_logging: true
+
+monitoring:
+  enable_metrics: true
+  metrics_interval: 10 # segundos
+  save_predictions: true
+  enable_visualization: true
