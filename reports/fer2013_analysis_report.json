@@ -4,12 +4,12 @@
     "total_images": 35887,
     "num_emotions": 7,
     "emotions": [
-      "happy",
       "sad",
+      "neutral",
+      "happy",
+      "angry",
       "fear",
       "surprise",
-      "neutral",
-      "angry",
       "disgust"
     ],
     "image_info": {
@@ -306,36 +306,36 @@
     }
   },
   "distribution": {
-    "happy": 8989,
     "sad": 6077,
+    "neutral": 6198,
+    "happy": 8989,
+    "angry": 4953,
     "fear": 5121,
     "surprise": 4002,
-    "neutral": 6198,
-    "angry": 4953,
     "disgust": 547
   },
   "splits": {
     "train": {
       "total": 28821,
       "emotions": {
-        "happy": 7164,
         "sad": 4938,
+        "neutral": 4982,
+        "happy": 7164,
+        "angry": 3993,
         "fear": 4103,
         "surprise": 3205,
-        "neutral": 4982,
-        "angry": 3993,
         "disgust": 436
       }
     },
     "validation": {
       "total": 7066,
       "emotions": {
-        "happy": 1825,
         "sad": 1139,
+        "neutral": 1216,
+        "happy": 1825,
+        "angry": 960,
         "fear": 1018,
         "surprise": 797,
-        "neutral": 1216,
-        "angry": 960,
         "disgust": 111
       }
     }

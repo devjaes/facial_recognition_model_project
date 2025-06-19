@@ -428,7 +428,8 @@ class FER2013Processor:
         unique_labels = np.unique(labels)
         class_weights = compute_class_weight('balanced', classes=unique_labels, y=labels)
         
-        weight_dict = {label: weight for label, weight in zip(unique_labels, class_weights)}
+        # Convertir claves a int nativo para evitar problemas de serialización
+        weight_dict = {int(label): float(weight) for label, weight in zip(unique_labels, class_weights)}
         
         logging.info("Pesos de clase calculados:")
         for label, weight in weight_dict.items():
