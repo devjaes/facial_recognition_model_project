@@ -56,22 +56,31 @@ class EmotionCNNRNN(nn.Module):
         cnn_config = self.config['model']['cnn_rnn_hybrid']
         
         # Primera capa convolucional (128 filtros como en el paper)
+        # Calcular padding para mantener dimensiones compatibles
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 128, kernel_size=3, stride=3, padding='same'),
+            nn.Conv2d(3, 128, kernel_size=3, stride=1, padding=1),  # Cambio: stride=1, padding=1
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2)
+            nn.MaxPool2d(2, 2)  # Reducir dimensiones aquí
         )
         
         # Segunda capa convolucional (64 filtros como en el paper)
         self.conv2 = nn.Sequential(
-            nn.Conv2d(128, 64, kernel_size=3, stride=3, padding='same'),
+            nn.Conv2d(128, 64, kernel_size=3, stride=1, padding=1),  # Cambio: stride=1, padding=1
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),
+            nn.MaxPool2d(2, 2),  # Reducir dimensiones aquí
             nn.Dropout(cnn_config['dropout'])
         )
         
-        # Calcular el tamaño de salida de CNN para conectar con RNN
-        self.cnn_output_size = self._calculate_cnn_output_size()
+        # Tercera capa convolucional para mayor reducción de dimensiones
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(64, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d((4, 4)),  # Forzar salida a 4x4
+            nn.Dropout(cnn_config['dropout'])
+        )
+        
+        # El tamaño de salida será 32 * 4 * 4 = 512
+        self.cnn_output_size = 32 * 4 * 4
         
         # Capa de aplanamiento para RNN
         self.flatten = nn.Flatten()
@@ -111,16 +120,6 @@ class EmotionCNNRNN(nn.Module):
             nn.Softmax(dim=1) if self.config['training']['loss_function'] != 'cross_entropy' else nn.Identity()
         )
     
-    def _calculate_cnn_output_size(self) -> int:
-        """Calcula el tamaño de salida de las capas CNN."""
-        # Crear un tensor dummy para calcular el tamaño
-        dummy_input = torch.randn(1, 3, *self.input_size)
-        with torch.no_grad():
-            x = self.conv1(dummy_input)
-            x = self.conv2(x)
-            x = self.flatten(x)
-        return x.shape[1]
-    
     def _initialize_weights(self):
         """Inicializa los pesos del modelo."""
         for module in self.modules():
@@ -145,12 +144,22 @@ class EmotionCNNRNN(nn.Module):
         Forward pass del modelo.
         
         Args:
-            x: Tensor de entrada [batch_size, sequence_length, channels, height, width]
+            x: Tensor de entrada [batch_size, channels, height, width] o 
+               [batch_size, sequence_length, channels, height, width]
             
         Returns:
             Tensor de predicciones [batch_size, num_emotions]
         """
-        batch_size, seq_len, channels, height, width = x.shape
+        # Manejar tanto imágenes individuales como secuencias
+        if x.dim() == 4:  # Imagen individual [batch_size, channels, height, width]
+            batch_size, channels, height, width = x.shape
+            # Simular secuencia repitiendo la imagen
+            x = x.unsqueeze(1).repeat(1, self.sequence_length, 1, 1, 1)
+            seq_len = self.sequence_length
+        elif x.dim() == 5:  # Secuencia [batch_size, sequence_length, channels, height, width]
+            batch_size, seq_len, channels, height, width = x.shape
+        else:
+            raise ValueError(f"Entrada inesperada con {x.dim()} dimensiones. Esperado 4 o 5.")
         
         # Procesar cada frame a través de CNN
         # Reshape para procesar todos los frames como un batch
@@ -159,6 +168,7 @@ class EmotionCNNRNN(nn.Module):
         # CNN Feature Extraction
         x = self.conv1(x)
         x = self.conv2(x)
+        x = self.conv3(x)  # Nueva capa convolucional
         x = self.flatten(x)
         
         # Reshape de vuelta para RNN [batch_size, seq_len, features]
@@ -181,19 +191,17 @@ class EmotionCNNRNN(nn.Module):
         Predicción para un solo frame (modo tiempo real).
         
         Args:
-            frame: Tensor de un frame [channels, height, width]
+            frame: Tensor de un frame [channels, height, width] o [1, channels, height, width]
             
         Returns:
             Tensor de predicciones [num_emotions]
         """
-        # Expandir dimensiones para simular secuencia
-        frame = frame.unsqueeze(0).unsqueeze(0)  # [1, 1, channels, height, width]
-        
-        # Duplicar el frame para simular secuencia temporal
-        frame_sequence = frame.repeat(1, self.sequence_length, 1, 1, 1)
+        # Asegurar que tenga batch dimension
+        if frame.dim() == 3:
+            frame = frame.unsqueeze(0)  # [1, channels, height, width]
         
         with torch.no_grad():
-            prediction = self.forward(frame_sequence)
+            prediction = self.forward(frame)
         
         return prediction.squeeze(0)  # Remover batch dimension
     
